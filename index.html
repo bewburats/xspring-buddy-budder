@@ -2,49 +2,118 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>Buddy Budder Wish Form</title>
+  <title>Buddy Budder Wish Board</title>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #fafafa;
+      padding: 20px;
+    }
+
+    input, textarea, button {
+      width: 100%;
+      padding: 8px;
+      margin-top: 6px;
+    }
+
+    button {
+      margin-top: 12px;
+      cursor: pointer;
+    }
+
+    .board {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .postit {
+      background: #fff9a6;
+      width: 220px;
+      padding: 12px;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+      border-radius: 6px;
+      position: relative;
+    }
+
+    .delete-btn {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+    }
+  </style>
 </head>
+
 <body>
 
   <h1>🎁 Buddy Budder</h1>
-  <p>ใส่ข้อมูลของคุณเพื่อให้บัดดี้เดาของขวัญได้</p>
 
-  <form onsubmit="showResult(); return false;">
-    <p>
-      <label>เลขของฉัน:</label><br>
-      <input type="number" id="number" required>
-    </p>
+  <form onsubmit="addPostIt(); return false;">
+    <label>เลขของฉัน</label>
+    <input type="number" id="number" required>
 
-    <p>
-      <label>คำใบ้:</label><br>
-      <textarea id="hint" rows="3" required></textarea>
-    </p>
+    <label>คำใบ้</label>
+    <textarea id="hint" rows="3" required></textarea>
 
-    <p>
-      <label>สิ่งที่อยากได้:</label><br>
-      <textarea id="wish" rows="3" required></textarea>
-    </p>
+    <label>สิ่งที่อยากได้</label>
+    <textarea id="wish" rows="3" required></textarea>
 
     <button type="submit">บันทึก</button>
   </form>
 
   <hr>
 
-  <h2>📌 ข้อมูลของคุณ</h2>
-  <p><strong>เลข:</strong> <span id="resultNumber">-</span></p>
-  <p><strong>คำใบ้:</strong> <span id="resultHint">-</span></p>
-  <p><strong>สิ่งที่อยากได้:</strong> <span id="resultWish">-</span></p>
+  <h2>🧷 Wish Board</h2>
+  <div class="board" id="board"></div>
 
   <script>
-    function showResult() {
-      document.getElementById("resultNumber").innerText =
-        document.getElementById("number").value;
+    // สร้าง ID ประจำเครื่อง (ครั้งเดียว)
+    let myId = localStorage.getItem("buddy_id");
+    if (!myId) {
+      myId = Date.now().toString() + Math.random().toString(36);
+      localStorage.setItem("buddy_id", myId);
+    }
 
-      document.getElementById("resultHint").innerText =
-        document.getElementById("hint").value;
+    function addPostIt() {
+      const number = document.getElementById("number").value;
+      const hint = document.getElementById("hint").value;
+      const wish = document.getElementById("wish").value;
 
-      document.getElementById("resultWish").innerText =
-        document.getElementById("wish").value;
+      const postit = document.createElement("div");
+      postit.className = "postit";
+      postit.dataset.owner = myId;
+
+      postit.innerHTML = `
+        <button class="delete-btn" onclick="deletePostIt(this)">×</button>
+        <h3>👤 เลข ${number}</h3>
+        <p><strong>คำใบ้:</strong><br>${hint}</p>
+        <p><strong>อยากได้:</strong><br>${wish}</p>
+      `;
+
+      document.getElementById("board").appendChild(postit);
+
+      // ล้างฟอร์ม
+      document.getElementById("number").value = "";
+      document.getElementById("hint").value = "";
+      document.getElementById("wish").value = "";
+    }
+
+    function deletePostIt(btn) {
+      const postit = btn.parentElement;
+
+      if (postit.dataset.owner === myId) {
+        postit.remove();
+      } else {
+        alert("คุณลบโพสต์ของคนอื่นไม่ได้");
+      }
     }
   </script>
 
