@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Buddy Budder Wish Form</title>
+</head>
+<body>
+
+  <h1>🎁 Buddy Budder</h1>
+  <p>ใส่ข้อมูลของคุณเพื่อให้บัดดี้เดาของขวัญได้</p>
+
+  <form onsubmit="showResult(); return false;">
+    <p>
+      <label>เลขของฉัน:</label><br>
+      <input type="number" id="number" required>
+    </p>
+
+    <p>
+      <label>คำใบ้:</label><br>
+      <textarea id="hint" rows="3" required></textarea>
+    </p>
+
+    <p>
+      <label>สิ่งที่อยากได้:</label><br>
+      <textarea id="wish" rows="3" required></textarea>
+    </p>
+
+    <button type="submit">บันทึก</button>
+  </form>
+
+  <hr>
+
+  <h2>📌 ข้อมูลของคุณ</h2>
+  <p><strong>เลข:</strong> <span id="resultNumber">-</span></p>
+  <p><strong>คำใบ้:</strong> <span id="resultHint">-</span></p>
+  <p><strong>สิ่งที่อยากได้:</strong> <span id="resultWish">-</span></p>
+
+  <script>
+    function showResult() {
+      document.getElementById("resultNumber").innerText =
+        document.getElementById("number").value;
+
+      document.getElementById("resultHint").innerText =
+        document.getElementById("hint").value;
+
+      document.getElementById("resultWish").innerText =
+        document.getElementById("wish").value;
+    }
+  </script>
+
+</body>
+</html>
